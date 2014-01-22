@@ -10,7 +10,7 @@ Cocos2d-x 3.0开始, Lua Binding使用tolua++方式自动绑定底层C++类到Lu
 
 在`fun.h`头文件中添加如下代码：
 
-```
+```cpp
 #include <iostream>
 #include <sstream>
 class Foo
@@ -60,7 +60,7 @@ Lua中userdata为自定义类型，即用户自定义C++类类型，非Lua基本
 
 接下来完成实现部分，在`fun.cpp`中添加如下代码：
 
-```
+```cpp
 #include "fun.h"
 
 extern "C"
@@ -135,7 +135,7 @@ void RegisterFoo(lua_State * l)
 
 `代码详解:`
 
-1. C++绑定到Lua的构造函数，`luaL_checkstring`用来检查构造函数的形参是否为`string`类型并返回这个`string`。利用`lua_newuserdata`创建一个userdata来存放`Foo`类对象指针。`luaL_getmetatable`将与名为`luaL_Foo`相关联的元表推入栈中。此时，Lua栈中的内容如下：
+1) C++绑定到Lua的构造函数，`luaL_checkstring`用来检查构造函数的形参是否为`string`类型并返回这个`string`。利用`lua_newuserdata`创建一个userdata来存放`Foo`类对象指针。`luaL_getmetatable`将与名为`luaL_Foo`相关联的元表推入栈中。此时，Lua栈中的内容如下：
 
 ```
 3| metatable "luaL_foo"   |-1
@@ -145,17 +145,17 @@ void RegisterFoo(lua_State * l)
 
 `lua_setmetatable`将位于Lua栈中-2位置的`userdata`添加到元表`luaL_foo`中。最后，返回值1使得Lua可以得到userdata，之后栈将会被清空。
 
-2. `luaL_checkudata`用来检测形参是否为`luaL_Foo`元表中的userdata，并返回这个userdata。
+2) `luaL_checkudata`用来检测形参是否为`luaL_Foo`元表中的userdata，并返回这个userdata。
 
-3. 此函数是将C++类中的Add()函数映射到Lua中，`lua_pushstring`将字符串压入栈中，返回值1使得字符串返回给Lua调用函数。
+3) 此函数是将C++类中的Add()函数映射到Lua中，`lua_pushstring`将字符串压入栈中，返回值1使得字符串返回给Lua调用函数。
 
-4. 此函数是将C++类中的析构函数映射到Lua中。
+4) 此函数是将C++类中的析构函数映射到Lua中。
 
-5. 此函数是注册C++类到Lua和注册所有已绑定的C++函数到Lua。`sFooRegs`给每个已绑定的C++函数一个能被Lua访问的名字。`luaL_newmetatable`创建一个名为luaL_Foo的元表并压入栈定，`luaL_register`将 `sFooRegs`添加到luaL_Foo中。`lua_pushvalue`将luaL_Foo元表中元素的拷贝压入栈中。`lua_setfield`将luaL_Foo元表的index域设为`__index`。`lua_setglobal`将元表luaL_Foo重命名为Foo并将它设为Lua的全局变量，这样Lua可以通过识别Foo来访问元表luaL_Foo，并使Lua脚本能够覆盖元表Foo，即覆盖C++函数。如此一来，用户可以用Lua代码自定功能，覆盖掉C++类中函数的功能，极大地提高了代码灵活性。
+5) 此函数是注册C++类到Lua和注册所有已绑定的C++函数到Lua。`sFooRegs`给每个已绑定的C++函数一个能被Lua访问的名字。`luaL_newmetatable`创建一个名为luaL_Foo的元表并压入栈定，`luaL_register`将 `sFooRegs`添加到luaL_Foo中。`lua_pushvalue`将luaL_Foo元表中元素的拷贝压入栈中。`lua_setfield`将luaL_Foo元表的index域设为`__index`。`lua_setglobal`将元表luaL_Foo重命名为Foo并将它设为Lua的全局变量，这样Lua可以通过识别Foo来访问元表luaL_Foo，并使Lua脚本能够覆盖元表Foo，即覆盖C++函数。如此一来，用户可以用Lua代码自定功能，覆盖掉C++类中函数的功能，极大地提高了代码灵活性。
 
 现在添加绑定函数的函数声明至`fun.h`中：
 
-```
+```cpp
 int l_Foo_constructor(lua_State * l);
 
 Foo * l_CheckFoo(lua_State * l, int n);
@@ -171,7 +171,7 @@ void RegisterFoo(lua_State * l);
 
 添加如下代码到`fun.lua`：
 
-```
+```lua
 function Foo:speak()
     print("Hello, I am a Foo")
 end
@@ -199,7 +199,7 @@ print(m)
 
 将`#include "fun.h"`添加至`AppDelegate.cpp`中，并在`AppDelegate.cpp`中的`applicationDidFinishLaunching`函数中添加如下代码：
 
-```
+```cpp
     // register lua engine
     auto engine = LuaEngine::getInstance();
     ScriptEngineManager::getInstance()->setScriptEngine(engine);
