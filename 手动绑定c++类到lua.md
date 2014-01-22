@@ -6,7 +6,7 @@ Cocos2d-x 3.0开始, Lua Binding使用tolua++方式自动绑定底层C++类到Lu
 
 首先，定义一个类Foo，这个类就是接下来要绑定到Lua的类。
 
-注意：所有C++类文件必须放在`Classes`文件夹里，所有Lua文件必须放在`Resources`文件夹里。
+`注意：`所有C++类文件必须放在`Classes`文件夹里，所有Lua文件必须放在`Resources`文件夹里。
 
 在`fun.h`头文件中添加如下代码：
 
