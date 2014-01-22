@@ -223,3 +223,13 @@ cocos2d: [LUA-print] fred: 3 + 4 = 7
 cocos2d: [LUA-print] Hello, I am a Foo
 cocos2d: [LUA-print] here comes the magic: fred: 9 + 8 = 17
 ```
+
+`Android环境测试:`
+
+如果希望在Android环境下调试，在执行`proj.android/build_native`脚本前，需要在`proj.android/jni/Android.mk`文件中添加`fun.cpp`文件包含：
+
+```
+LOCAL_SRC_FILES := hellolua/main.cpp \
+                   ../../Classes/AppDelegate.cpp \
+                   ../../Classes/fun.cpp
+```
