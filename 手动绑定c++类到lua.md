@@ -167,7 +167,7 @@ int l_Foo_destructor(lua_State * l);
 void RegisterFoo(lua_State * l);
 ```
 
-#### Lua测试代码
+###Lua测试代码
 
 添加如下代码到`fun.lua`：
 
@@ -195,7 +195,7 @@ print(m)
 ```
 1. 同名函数覆盖绑定的C++函数，提高扩展性。
 
-####绑定检测
+####绑定检
 
 将`#include "fun.h"`添加至`AppDelegate.cpp`中，并在`AppDelegate.cpp`中的`applicationDidFinishLaunching`函数中添加如下代码：
 
